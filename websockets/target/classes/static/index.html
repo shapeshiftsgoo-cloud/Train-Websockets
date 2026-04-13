@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento Climático - WebSockets</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .status { padding: 8px 15px; border-radius: 20px; font-weight: bold; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+
+        #dashboard { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; }
+        .card {
+            padding: 20px; border-radius: 10px; width: 200px; color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+        }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.2em; }
+        .card .temp { font-size: 2em; font-weight: bold; margin-bottom: 5px; }
+        .card .desc { font-size: 0.9em; opacity: 0.9; }
+        .card .time { font-size: 0.8em; margin-top: 15px; text-align: right; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Dashboard Climático Real-Time</h1>
+    <div id="status" class="status disconnected">Desconectado</div>
+</div>
+
+<div id="dashboard">
+</div>
+
+<script>
+    let stompClient = null;
+
+    function conectar() {
+        // Conecta ao endpoint configurado no Spring Boot
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        // Desativa os logs de debug do STOMP no console (opcional)
+        stompClient.debug = null;
+
+        stompClient.connect({}, function (frame) {
+            document.getElementById('status').innerText = 'Conectado';
+            document.getElementById('status').className = 'status connected';
+
+            // Inscreve no tópico para receber as atualizações
+            stompClient.subscribe('/topic/clima', function (mensagem) {
+                const dados = JSON.parse(mensagem.body);
+                atualizarDashboard(dados);
+            });
+        }, function(error) {
+            document.getElementById('status').innerText = 'Desconectado';
+            document.getElementById('status').className = 'status disconnected';
+            // Tenta reconectar após 5 segundos em caso de queda
+            setTimeout(conectar, 5000);
+        });
+    }
+
+    function atualizarDashboard(dados) {
+        const dashboard = document.getElementById('dashboard');
+
+        // Verifica se a cidade já tem um card, se sim, atualiza; se não, cria um novo
+        let cardId = 'card-' + dados.cidade.replace(/\s+/g, '-');
+        let card = document.getElementById(cardId);
+
+        if (!card) {
+            card = document.createElement('div');
+            card.id = cardId;
+            card.className = 'card';
+            dashboard.prepend(card); // Adiciona os novos no topo
+        }
+
+        // Define a cor baseada na temperatura
+        let corFundo = '#6c757d'; // Default
+        if (dados.temperatura < 18) corFundo = '#007bff'; // Frio (Azul)
+        else if (dados.temperatura >= 18 && dados.temperatura < 26) corFundo = '#ffc107'; // Agradável (Amarelo)
+        else if (dados.temperatura >= 26) corFundo = '#dc3545'; // Calor (Vermelho)
+
+        card.style.backgroundColor = corFundo;
+
+        card.innerHTML = `
+                <h3>${dados.cidade}</h3>
+                <div class="temp">${dados.temperatura}°C</div>
+                <div class="desc">${dados.descricao}</div>
+                <div class="time">Atualizado às ${dados.horario}</div>
+            `;
+    }
+
+    // Inicia a conexão quando a página carregar
+    window.onload = conectar;
+</script>
+</body>
+</html>

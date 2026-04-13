@@ -1,0 +1,4 @@
+com\faculdade\websockets\WebsocketsApplication.class
+com\faculdade\websockets\WebSocketAppService.class
+com\faculdade\websockets\WebSocketAppService$CidadeInfo.class
+com\faculdade\websockets\WebsocketsAppConfig.class
