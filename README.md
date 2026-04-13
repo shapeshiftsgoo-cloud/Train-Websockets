@@ -28,7 +28,9 @@ O objetivo principal é ilustrar o comportamento de um servidor que faz o *push*
     mvn spring-boot:run
 
 4. Abra o navegador e acesse:
-   ```http://localhost:8080
+   ```bash
+
+   http://localhost:8080
 
 ## Explicação do Fluxo de Mensagens
 
