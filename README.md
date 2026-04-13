@@ -15,8 +15,7 @@ O objetivo principal é ilustrar o comportamento de um servidor que faz o *push*
 ### Passos
 1. Clone este repositório:
    ```bash
-[   git clone https://github.com/shapeshiftsgoo-cloud/Train-Websockets.git
-](https://github.com/shapeshiftsgoo-cloud/Train-Websockets.git)
+   git clone https://github.com/shapeshiftsgoo-cloud/Train-Websockets.git
 
     Navegue até a pasta do projeto:
     Bash
