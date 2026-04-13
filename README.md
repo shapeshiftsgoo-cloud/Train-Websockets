@@ -17,17 +17,17 @@ O objetivo principal é ilustrar o comportamento de um servidor que faz o *push*
    ```bash
    git clone https://github.com/shapeshiftsgoo-cloud/Train-Websockets.git
 
-    Navegue até a pasta do projeto:
+2. Navegue até a pasta do projeto:
     Bash
 
     cd websockets
 
-    Execute o projeto usando o Maven:
+3. Execute o projeto usando o Maven:
     Bash
 
     mvn spring-boot:run
 
-    Abra o navegador e acesse: http://localhost:8080
+4. Abra o navegador e acesse: http://localhost:8080
 
 ## Explicação do Fluxo de Mensagens
 
