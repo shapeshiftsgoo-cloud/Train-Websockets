@@ -18,16 +18,17 @@ O objetivo principal é ilustrar o comportamento de um servidor que faz o *push*
    git clone https://github.com/shapeshiftsgoo-cloud/Train-Websockets.git
 
 2. Navegue até a pasta do projeto:
-    Bash
+    ```bash
 
     cd websockets
 
 3. Execute o projeto usando o Maven:
-    Bash
+    ```bash
 
     mvn spring-boot:run
 
-4. Abra o navegador e acesse: http://localhost:8080
+4. Abra o navegador e acesse:
+   ```http://localhost:8080
 
 ## Explicação do Fluxo de Mensagens
 
